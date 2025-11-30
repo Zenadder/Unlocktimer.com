@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Lancement Teaser 2026 - Zenadder</title>
+    <style>
+        body {
+            font-family: 'Arial Black', Gadget, sans-serif;
+            background: #000;
+            color: #fff;
+            text-align: center;
+            display: flex; 
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+        #timer {
+            font-size: 6vw;
+            letter-spacing: 5px;
+            margin-bottom: 30px;
+            /* GLOW PROPRE ET SUBTIL */
+            text-shadow: 
+                0 0 8px rgba(255, 255, 255, 0.6),
+                0 0 4px rgba(255, 255, 255, 0.8),
+                0 0 1px #fff; 
+            color: #fff; 
+        }
+        /* Masque l'iFrame initialement */
+        #video-container {
+            display: none; 
+            /* TAILLE OPTIMISÉE : 60% de la largeur de la fenêtre */
+            width: 60vw; 
+            height: 33.75vw; /* Ratio 16:9 */
+            max-width: 1280px; 
+            max-height: 720px;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.7); 
+        }
+        #youtube-iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+
+<div id="timer">00J 00H : 00M : 00S</div> 
+
+<div id="video-container"> 
+    <iframe 
+        id="youtube-iframe"
+        src="https://www.youtube.com/embed/mVV2HQpdV6g?autoplay=1&mute=1&enablejsapi=1" 
+        frameborder="0" 
+        allow="autoplay; encrypted-media" 
+        allowfullscreen>
+    </iframe>
+</div>
+
+<script>
+    // 🎯 DATE DE LANCEMENT FINALE : 31 Décembre 2025 à 23:59:59 (Heure de Paris/CET)
+    const LAUNCH_DATE_TIME = 'December 31, 2025 23:59:59 GMT+01:00'; 
+    const endDate = new Date(LAUNCH_DATE_TIME).getTime();
+
+    // --- Variables DOM ---
+    const timerElement = document.getElementById("timer");
+    const videoContainer = document.getElementById("video-container");
+    const iframeElement = document.getElementById("youtube-iframe");
+
+    // --- Fonction de Mise à Jour du Compte à Rebours ---
+    function updateCountdown() {
+        const now = new Date().getTime();
+        const distance = endDate - now;
+
+        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+        if (distance > 0) {
+            // Affichage normal du compte à rebours
+            timerElement.textContent = 
+                days + "J " + 
+                hours.toString().padStart(2, '0') + "H : " + 
+                minutes.toString().padStart(2, '0') + "M : " + 
+                seconds.toString().padStart(2, '0') + "S";
+        } else {
+            // --- LOGIQUE DE LANCEMENT (dès que le temps est écoulé) ---
+            clearInterval(interval);
+            
+            // Masque le timer immédiatement
+            timerElement.style.display = 'none'; 
+
+            // Afficher le conteneur de la vidéo
+            videoContainer.style.display = "block"; 
+            
+            // Recharger l'iframe pour forcer le lancement avec le son activé (mute=0)
+            const currentSrc = iframeElement.src;
+            const newSrc = currentSrc.replace('mute=1', 'mute=0'); 
+            iframeElement.src = newSrc;
+        }
+    }
+
+    // Appel initial et intervalle
+    updateCountdown();
+    const interval = setInterval(updateCountdown, 1000);
+</script>
+
+</body>
+</html>

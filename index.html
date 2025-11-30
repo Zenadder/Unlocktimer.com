@@ -60,9 +60,9 @@
 </div>
 
 <script>
-    // 🎯 DATE DE LANCEMENT FINALE : 31 Décembre 2025 à 23:59:59 (Heure de Paris/CET)
-    const LAUNCH_DATE_TIME = 'December 31, 2025 23:59:59 GMT+01:00'; 
-    const endDate = new Date(LAUNCH_DATE_TIME).getTime();
+    // 🎯 CONFIGURATION POUR TEST RAPIDE : Lancement dans 5 secondes
+    const LAUNCH_DELAY_MS = 5 * 1000; // 5 secondes
+    const endDate = new Date().getTime() + LAUNCH_DELAY_MS; 
 
     // --- Variables DOM ---
     const timerElement = document.getElementById("timer");
@@ -80,14 +80,13 @@
         const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
         if (distance > 0) {
-            // Affichage normal du compte à rebours
             timerElement.textContent = 
                 days + "J " + 
                 hours.toString().padStart(2, '0') + "H : " + 
                 minutes.toString().padStart(2, '0') + "M : " + 
                 seconds.toString().padStart(2, '0') + "S";
         } else {
-            // --- LOGIQUE DE LANCEMENT (dès que le temps est écoulé) ---
+            // --- LOGIQUE DE LANCEMENT ---
             clearInterval(interval);
             
             // Masque le timer immédiatement
@@ -96,7 +95,7 @@
             // Afficher le conteneur de la vidéo
             videoContainer.style.display = "block"; 
             
-            // Recharger l'iframe pour forcer le lancement avec le son activé (mute=0)
+            // Recharge l'iframe pour forcer le lancement avec le son activé (mute=0)
             const currentSrc = iframeElement.src;
             const newSrc = currentSrc.replace('mute=1', 'mute=0'); 
             iframeElement.src = newSrc;
@@ -112,4 +111,5 @@
 </body>
 
 </html>
+
 

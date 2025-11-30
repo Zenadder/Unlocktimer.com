@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Unlock the timer</title>
+    <title>Lancement Teaser 2026 - Zenadder</title>
     <style>
         body {
             font-family: 'Arial Black', Gadget, sans-serif;
@@ -60,9 +60,9 @@
 </div>
 
 <script>
-    // 🎯 CONFIGURATION POUR TEST RAPIDE : Lancement dans 5 secondes
-    const LAUNCH_DELAY_MS = 5 * 1000; // 5 secondes
-    const endDate = new Date().getTime() + LAUNCH_DELAY_MS; 
+    // 🎯 DATE DE LANCEMENT FINALE : 31 Décembre 2025 à 23:59:59 (Heure de Paris/CET)
+    const LAUNCH_DATE_TIME = 'December 31, 2025 23:59:59 GMT+01:00'; 
+    const endDate = new Date(LAUNCH_DATE_TIME).getTime();
 
     // --- Variables DOM ---
     const timerElement = document.getElementById("timer");
@@ -72,19 +72,52 @@
     // --- Fonction de Mise à Jour du Compte à Rebours ---
     function updateCountdown() {
         const now = new Date().getTime();
-        const distance = endDate - now;
-
-        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+        let distance = endDate - now;
 
         if (distance > 0) {
-            timerElement.textContent = 
-                days + "J " + 
-                hours.toString().padStart(2, '0') + "H : " + 
-                minutes.toString().padStart(2, '0') + "M : " + 
-                seconds.toString().padStart(2, '0') + "S";
+            
+            // --- Calculs de base ---
+            const totalSeconds = Math.floor(distance / 1000);
+            const totalMinutes = Math.floor(totalSeconds / 60);
+            const totalHours = Math.floor(totalMinutes / 60);
+            
+            // --- Logique d'affichage conditionnel ---
+            let displayString = "";
+
+            // Moins de 60 minutes : Affiche M:S
+            if (distance < (60 * 60 * 1000)) { 
+                const minutes = Math.floor((distance % (60 * 60 * 1000)) / (60 * 1000));
+                const seconds = Math.floor((distance % (60 * 1000)) / 1000);
+                displayString = 
+                    minutes.toString().padStart(2, '0') + "M : " + 
+                    seconds.toString().padStart(2, '0') + "S";
+
+            // Moins de 24 heures : Affiche H:M:S
+            } else if (distance < (24 * 60 * 60 * 1000)) { 
+                const hours = Math.floor(distance / (60 * 60 * 1000));
+                const minutes = Math.floor((distance % (60 * 60 * 1000)) / (60 * 1000));
+                const seconds = Math.floor((distance % (60 * 1000)) / 1000);
+                displayString = 
+                    hours.toString().padStart(2, '0') + "H : " + 
+                    minutes.toString().padStart(2, '0') + "M : " + 
+                    seconds.toString().padStart(2, '0') + "S";
+            
+            // Plus de 24 heures : Affiche J:H:M:S
+            } else {
+                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                displayString = 
+                    days + "J " + 
+                    hours.toString().padStart(2, '0') + "H : " + 
+                    minutes.toString().padStart(2, '0') + "M : " + 
+                    seconds.toString().padStart(2, '0') + "S";
+            }
+
+            timerElement.textContent = displayString;
+
         } else {
             // --- LOGIQUE DE LANCEMENT ---
             clearInterval(interval);
@@ -95,7 +128,7 @@
             // Afficher le conteneur de la vidéo
             videoContainer.style.display = "block"; 
             
-            // Recharge l'iframe pour forcer le lancement avec le son activé (mute=0)
+            // Recharger l'iframe pour forcer le lancement avec le son activé (mute=0)
             const currentSrc = iframeElement.src;
             const newSrc = currentSrc.replace('mute=1', 'mute=0'); 
             iframeElement.src = newSrc;
@@ -107,9 +140,5 @@
     const interval = setInterval(updateCountdown, 1000);
 </script>
 
-
 </body>
-
 </html>
-
-

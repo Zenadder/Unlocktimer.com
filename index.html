@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Unlock The Timer</title>
+    <title>Lancement Teaser 2026 - Zenadder</title>
     <style>
         body {
             font-family: 'Arial Black', Gadget, sans-serif;
@@ -28,24 +28,23 @@
                 0 0 1px #fff; 
             color: #fff; 
         }
-        /* ZONE CACHÉE CLICQUABLE */
+        /* ZONE CACHÉE CLICQUABLE (pour l'Easter Egg) */
         #secret-zone {
             position: fixed; 
             bottom: 0;
             right: 0;
-            width: 150px; 
-            height: 150px;
+            width: 50px; 
+            height: 50px;
             cursor: pointer; 
-            /* Vraiment invisible une fois en production */
-            /* Si vous voulez tester la position, utilisez background: red; */
             z-index: 1000; 
         }
 
         /* Masque l'iFrame initialement */
         #video-container {
             display: none; 
+            /* TAILLE OPTIMISÉE : 60% de la largeur de la fenêtre */
             width: 60vw; 
-            height: 33.75vw; 
+            height: 33.75vw; /* Ratio 16:9 */
             max-width: 1280px; 
             max-height: 720px;
             box-shadow: 0 0 20px rgba(255, 255, 255, 0.7); 
@@ -68,7 +67,7 @@
 <div id="video-container"> 
     <iframe 
         id="youtube-iframe"
-        src="https://www.youtube.com/watch?v=mUXElFnmG-M" 
+        src="https://www.youtube.com/embed/mUXElFnmG-M?autoplay=1&mute=1&enablejsapi=1" 
         frameborder="0" 
         allow="autoplay; encrypted-media" 
         allowfullscreen>
@@ -95,23 +94,18 @@
         const now = new Date().getTime();
         const distance = endDate - now;
 
-        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
         if (distance > 0) {
             
             // --- Logique d'affichage dynamique (J/H/M/S) ---
             let displayString = "";
 
-            if (distance < (60 * 60 * 1000)) { // Moins d'une heure
+            if (distance < (60 * 60 * 1000)) { // Moins d'une heure : M:S
                 const minutes = Math.floor((distance % (60 * 60 * 1000)) / (60 * 1000));
                 const seconds = Math.floor((distance % (60 * 1000)) / 1000);
                 displayString = 
                     minutes.toString().padStart(2, '0') + "M : " + 
                     seconds.toString().padStart(2, '0') + "S";
-            } else if (distance < (24 * 60 * 60 * 1000)) { // Moins de 24 heures
+            } else if (distance < (24 * 60 * 60 * 1000)) { // Moins de 24 heures : H:M:S
                 const hours = Math.floor(distance / (60 * 60 * 1000));
                 const minutes = Math.floor((distance % (60 * 60 * 1000)) / (60 * 1000));
                 const seconds = Math.floor((distance % (60 * 1000)) / 1000);
@@ -119,7 +113,7 @@
                     hours.toString().padStart(2, '0') + "H : " + 
                     minutes.toString().padStart(2, '0') + "M : " + 
                     seconds.toString().padStart(2, '0') + "S";
-            } else { // Plus de 24 heures
+            } else { // Plus de 24 heures : J:H:M:S
                 const days = Math.floor(distance / (1000 * 60 * 60 * 24));
                 const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
                 const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
@@ -135,11 +129,12 @@
             timerElement.textContent = displayString;
 
         } else {
-            // --- LOGIQUE DE LANCEMENT ---
+            // --- LOGIQUE DE LANCEMENT : VIDÉO ---
             clearInterval(interval);
             timerElement.style.display = 'none'; 
             videoContainer.style.display = "block"; 
             
+            // Rechargement pour activer le son
             const currentSrc = iframeElement.src;
             const newSrc = currentSrc.replace('mute=1', 'mute=0'); 
             iframeElement.src = newSrc;
@@ -167,5 +162,3 @@
 
 </body>
 </html>
-
-

@@ -2,164 +2,61 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Unlock The Timer</title>
+    <title>Zenadder - Teaser Officiel 2026</title>
     <style>
         body {
             font-family: 'Arial Black', Gadget, sans-serif;
-            background: #000;
-            color: #fff;
-            text-align: center;
-            display: flex; 
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
+            background: #000; /* Fond noir pur */
             margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
             overflow: hidden;
         }
-        #timer {
-            font-size: 6vw;
-            letter-spacing: 5px;
-            margin-bottom: 30px;
-            /* GLOW PROPRE ET SUBTIL */
-            text-shadow: 
-                0 0 8px rgba(255, 255, 255, 0.6),
-                0 0 4px rgba(255, 255, 255, 0.8),
-                0 0 1px #fff; 
-            color: #fff; 
-        }
-        /* ZONE CACHÉE CLICQUABLE (pour l'Easter Egg) */
-        #secret-zone {
-            position: fixed; 
-            bottom: 0;
-            right: 0;
-            width: 50px; 
-            height: 50px;
-            cursor: pointer; 
-            z-index: 1000; 
+
+        #video-container {
+            /* Taille de la vidéo (60% de la largeur de l'écran) */
+            width: 60vw;
+            height: 33.75vw; /* Ratio 16:9 */
+            max-width: 1280px;
+            max-height: 720px;
+            
+            /* Effet de glow blanc autour du lecteur */
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.4);
+            border-radius: 4px;
+            background: #000;
         }
 
-        /* Masque l'iFrame initialement */
-        #video-container {
-            display: none; 
-            /* TAILLE OPTIMISÉE : 60% de la largeur de la fenêtre */
-            width: 60vw; 
-            height: 33.75vw; /* Ratio 16:9 */
-            max-width: 1280px; 
-            max-height: 720px;
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.7); 
-        }
-        #youtube-iframe {
+        iframe {
             width: 100%;
             height: 100%;
             border: none;
         }
-        /* Le lien caché Discord est invisible */
-        #discord-link {
-            display: none; 
+
+        /* Optionnel : Zone secrète pour le Discord toujours active en bas à droite */
+        #secret-zone {
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            width: 50px;
+            height: 50px;
+            cursor: default;
+            z-index: 1000;
         }
     </style>
 </head>
 <body>
 
-<div id="timer">00J 00H : 00M : 00S</div> 
+    <div id="video-container">
+        <iframe 
+            src="https://www.youtube.com/embed/mUXElFnmG-M?autoplay=1&rel=0" 
+            allow="autoplay; encrypted-media" 
+            allowfullscreen>
+        </iframe>
+    </div>
 
-<div id="video-container"> 
-    <iframe 
-        id="youtube-iframe"
-        src="https://www.youtube.com/embed/mUXElFnmG-M?autoplay=1&mute=1&enablejsapi=1" 
-        frameborder="0" 
-        allow="autoplay; encrypted-media" 
-        allowfullscreen>
-    </iframe>
-</div>
-
-<div id="secret-zone"></div>
-<a id="discord-link" href="https://discord.gg/f96CszPkJD" target="_blank">Rejoindre le Discord</a>
-
-<script>
-    // 🎯 DATE DE LANCEMENT FINALE : 31 Décembre 2025 à 23:59:59 (Heure de Paris/CET)
-    const LAUNCH_DATE_TIME = 'December 31, 2025 23:59:59 GMT+01:00'; 
-    const endDate = new Date(LAUNCH_DATE_TIME).getTime();
-
-    // --- Variables DOM ---
-    const timerElement = document.getElementById("timer");
-    const videoContainer = document.getElementById("video-container");
-    const iframeElement = document.getElementById("youtube-iframe");
-    const discordLinkElement = document.getElementById("discord-link"); 
-    const secretZoneElement = document.getElementById("secret-zone");
-
-    // --- Fonction de Mise à Jour du Compte à Rebours ---
-    function updateCountdown() {
-        const now = new Date().getTime();
-        const distance = endDate - now;
-
-        if (distance > 0) {
-            
-            // --- Logique d'affichage dynamique (J/H/M/S) ---
-            let displayString = "";
-
-            if (distance < (60 * 60 * 1000)) { // Moins d'une heure : M:S
-                const minutes = Math.floor((distance % (60 * 60 * 1000)) / (60 * 1000));
-                const seconds = Math.floor((distance % (60 * 1000)) / 1000);
-                displayString = 
-                    minutes.toString().padStart(2, '0') + "M : " + 
-                    seconds.toString().padStart(2, '0') + "S";
-            } else if (distance < (24 * 60 * 60 * 1000)) { // Moins de 24 heures : H:M:S
-                const hours = Math.floor(distance / (60 * 60 * 1000));
-                const minutes = Math.floor((distance % (60 * 60 * 1000)) / (60 * 1000));
-                const seconds = Math.floor((distance % (60 * 1000)) / 1000);
-                displayString = 
-                    hours.toString().padStart(2, '0') + "H : " + 
-                    minutes.toString().padStart(2, '0') + "M : " + 
-                    seconds.toString().padStart(2, '0') + "S";
-            } else { // Plus de 24 heures : J:H:M:S
-                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-                displayString = 
-                    days + "J " + 
-                    hours.toString().padStart(2, '0') + "H : " + 
-                    minutes.toString().padStart(2, '0') + "M : " + 
-                    seconds.toString().padStart(2, '0') + "S";
-            }
-
-            timerElement.textContent = displayString;
-
-        } else {
-            // --- LOGIQUE DE LANCEMENT : VIDÉO ---
-            clearInterval(interval);
-            timerElement.style.display = 'none'; 
-            videoContainer.style.display = "block"; 
-            
-            // Rechargement pour activer le son
-            const currentSrc = iframeElement.src;
-            const newSrc = currentSrc.replace('mute=1', 'mute=0'); 
-            iframeElement.src = newSrc;
-        }
-    }
-
-    // Appel initial et intervalle
-    updateCountdown();
-    const interval = setInterval(updateCountdown, 1000);
-
-    // -------------------------------------------------------------------
-    // --- EASTER EGG : Action au Clic sur la Zone Secrète ---
-    secretZoneElement.addEventListener('click', function() {
-        discordLinkElement.click(); 
-    });
-
-    // --- EASTER EGG : Détection de la Combinaison de Touches (Ctrl + D) ---
-    document.addEventListener('keydown', function(event) {
-        if ((event.ctrlKey || event.metaKey) && event.key === 'd') {
-            event.preventDefault(); 
-            discordLinkElement.click(); 
-        }
-    });
-</script>
+    <div id="secret-zone" onclick="window.open('https://discord.gg/f96CszPkJD', '_blank')"></div>
 
 </body>
 </html>
-
